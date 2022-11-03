@@ -37,41 +37,46 @@ afterEach(async () => {
   await browser.close();
 });
 
-describe('the tasks div', () => {
-  it('should contain three task items with statuses', async () => {
-    const elements = await page.$$(`[id^="task-row-"] > [id^="task-description-"] + [id^="task-status-"]`);
-    expect(elements.length).toBe(3);
+describe('the tasks-status todo', () => {
+  it('should have a background of red', async () => {
+    const backgroundColor = await page.$eval('.todo', (todo) => {
+      let style = window.getComputedStyle(todo);
+      return style.getPropertyValue('background-color');
+    });
+      
+    expect(backgroundColor).toBe('rgb(255, 0, 0)');
   });
 });
 
-describe('the task description and status', () => {
-  it('should display in the same row', async () => {
-    const matches = await page.$eval('style', (style) => {
-      return style.innerHTML.match(/\.row.*{[\s\S][^}]*display.*:.*flex.*;/g).length;
+describe('the tasks-status doing', () => {
+  it('should have a background of yellow', async () => {
+    const backgroundColor = await page.$eval('.doing', (doing) => {
+      let style = window.getComputedStyle(doing);
+      return style.getPropertyValue('background-color');
     });
     
-    expect(matches).toEqual(1);
+    expect(backgroundColor).toBe('rgb(255, 255, 0)');
   });
 });
 
-describe('the task description', () => {
-  it('should be padded with 5px', async () => {
-    const padding = await page.$eval(`[id^="task-description-"]`, (description) => {
-      let style = window.getComputedStyle(description);
-      return style.getPropertyValue('padding');
+describe('the tasks-status done', () => {
+  it('should have a background of green', async () => {
+    const backgroundColor = await page.$eval('.done', (done) => {
+      let style = window.getComputedStyle(done);
+      return style.getPropertyValue('background-color');
     });
-
-    expect(padding).toBe('5px');
+    
+    expect(backgroundColor).toBe('rgb(0, 128, 0)');
   });
 });
 
-describe('the task status', () => {
-  it('should be padded with 5px', async () => {
-    const padding = await page.$eval(`[id^="task-status-"]`, (status) => {
+describe('all of the tasks-status', () => {
+  it('should have rounded corners of 10px', async () => {
+    const borderRadius = await page.$eval('.task-status', (status) => {
       let style = window.getComputedStyle(status);
-      return style.getPropertyValue('padding');
+      return style.getPropertyValue('border-radius');
     });
 
-    expect(padding).toBe('5px');
+    expect(borderRadius).toBe('10px');
   });
 });
